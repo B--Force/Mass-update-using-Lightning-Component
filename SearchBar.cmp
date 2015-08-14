@@ -1,0 +1,8 @@
+<aura:component >
+
+    <div>
+        <input type="text" class="form-control"
+                placeholder="Search" onkeyup="{!c.searchLeads}"/>
+    </div>
+
+</aura:component>
