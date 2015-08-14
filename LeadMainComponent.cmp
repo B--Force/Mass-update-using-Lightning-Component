@@ -1,0 +1,68 @@
+<aura:component controller="bcool.LeadController" implements="force:appHostable">
+    <bcool:load filesInSeries="/resource/BootstrapSF1/bootstrap-sf1-0.1.0-beta.15/dist/css/bootstrap.css,/resource/Jquery.sfjs,/resource/Bootstrap.sfjs"/>
+    <aura:handler event="bcool:staticResourcesLoaded" action="{!c.initScripts}"/>
+    <aura:attribute name="Leads" type="Lead[]"/>
+    <aura:attribute name="selectedLeads" type="String[]" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <aura:handler event="bcool:SearchLead" action="{!c.getLeads}"/>
+    <div class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header" style="width:100%;">
+                <button aura:id="massUpdate" class="btn btn-default btn-md massupdbtn">Mass Update</button> 
+                <button aura:id="modalTgl" class="btn btn-default btn-md assignbtn"  onclick="{!c.updateOwner}">Assign to Me</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" aura:id="modalDlg">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Lead Status</h4>
+                </div>
+                <div class="modal-body">                    
+                    
+                    <ui:inputSelect label="Select Status:" class="dynamic" aura:id="status">
+                        <ui:inputSelectOption text="Open - Not Contacted"/>
+                        <ui:inputSelectOption text="Working - Contacted" value="true"/>
+                        <ui:inputSelectOption text="Closed - Converted"/>
+                        <ui:inputSelectOption text="Closed - Not Converted"/>
+                    </ui:inputSelect>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" aura:id="save" label="Save" press="{!c.massupdate}" onclick="{!c.massupdate}">Save</button>                    
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    
+    <div class="container">        
+        <div class="col-sm-12">
+            <bcool:SearchBar /> 
+            <br/>  
+            <ul class="list-group">        
+                
+                <aura:iteration items="{!v.Leads}" var="Lead">
+                    
+                    <div class="card context-lead">
+                        <div class="card-heading">
+                            <ui:inputCheckbox text="{!Lead.Id}" change="{!c.updateSelectedLeads}"/> <br/>
+                            <span>{!Lead.Name}</span>
+                        </div>
+                        <ul class="card-detail ">
+                            <li><span style="font-weight:bold;">Phone:</span> {!Lead.Phone}</li>
+                            <li><span style="font-weight:bold;">Status:</span> {!Lead.Status}</li>
+                            <li><span style="font-weight:bold;">Owner:</span> {!Lead.Owner.Name}</li>
+                        </ul>
+                    </div>
+                    
+                    
+                </aura:iteration>
+            </ul>
+        </div>       
+    </div>
+</aura:component>
